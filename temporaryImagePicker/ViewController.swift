@@ -58,12 +58,10 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        topTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.defaultTextAttributes = memeTextAttributes
         topTextField.text = "TOP"
         bottomTextField.text = "BOTTOM"
-        topTextField.textAlignment = .center
-        bottomTextField.textAlignment = .center
+        setTextField(topTextField, "HelveticaNeue-CondensedBlack", 40)
+        setTextField(bottomTextField, "HelveticaNeue-CondensedBlack", 40)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         subscribeToKeyboardNotification()
         saveButton.isEnabled = (imagePickerView.image != nil)
@@ -179,6 +177,19 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         return memedImage
     }
     
+    func setTextField(_ tf: UITextField, _ font: String, _ size: Int){
+        let memeTextAttributes: [NSAttributedString.Key: Any] = [
+            NSAttributedString.Key.strokeColor : UIColor.black,
+            NSAttributedString.Key.foregroundColor : UIColor.white,
+            NSAttributedString.Key.font: UIFont(name: font, size: CGFloat(size))!,
+            NSAttributedString.Key.strokeWidth: -3.0
+        ]
+        tf.defaultTextAttributes = memeTextAttributes
+        tf.textAlignment = .center
+        
+    }
+    
+    
     @IBAction func sharePressed(_ sender: Any) {
         if saveButton.isEnabled {
             let memedImage = generateMemedImage()
@@ -209,16 +220,8 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     
     @IBAction func doneFontPressed(_ sender: Any) {
         selectedSize = Int(fontSizeText.text ?? "40") ?? 40
-        memeTextAttributes = [
-            NSAttributedString.Key.strokeColor : UIColor.black,
-            NSAttributedString.Key.foregroundColor : UIColor.white,
-            NSAttributedString.Key.font: UIFont(name:(selectedFont ?? "HelveticaNeue-CondensedBlack"), size: CGFloat(selectedSize))!,
-            NSAttributedString.Key.strokeWidth: -3.0
-        ]
-        topTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        topTextField.textAlignment = .center
-        bottomTextField.textAlignment = .center
+        setTextField(topTextField, selectedFont ?? "HelveticaNeue-CondensedBlack", selectedSize)
+        setTextField(bottomTextField, selectedFont ?? "HelveticaNeue-CondensedBlack", selectedSize)
         self.chooseFontView.removeFromSuperview()
     }
     
